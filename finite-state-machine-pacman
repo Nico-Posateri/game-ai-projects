@@ -1,3 +1,5 @@
+// A "zoomed-in" look at the theoretical FSM of a Unity-cloned Blinky from Pac-Man. 
+
 public class BlinkyFSM : MonoBehavior
 {
 	// Declare available states
