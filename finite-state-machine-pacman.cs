@@ -1,5 +1,14 @@
 // A "zoomed-in" look at the theoretical FSM of a Unity-cloned Blinky from Pac-Man.
 // The functions used in this Finite State Machine do not exist as a result.
+// This is simply meant to showcase the basic elements of an FSM.
+//
+// The components of a Finite State Machine and their corresponding functions or data types:
+//
+// States:					Transitions:
+//	States			switch			Transitions			if
+//	Available states	enum {}			Transition condition		bool F()
+//	Current state		enum S			Transition action		void F()
+//	State action		void F()
 
 public class BlinkyFSM : MonoBehavior
 {
