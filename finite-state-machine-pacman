@@ -1,0 +1,14 @@
+public class BlinkyFSM : MonoBehavior
+{
+// Declare available states
+public enum State
+{
+Scatter,
+Chase,
+Frightened,
+Dead
+}
+
+// Declare current state
+public State CurrentState = State.Scatter;
+}
