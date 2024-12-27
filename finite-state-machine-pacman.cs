@@ -37,8 +37,8 @@ public class BlinkyFSM : MonoBehavior
     			if (Timer()) // Scatter => Chase
 				{
 					CurrentState = State.Chase;
-     				break;
-    			}
+     					break;
+    				}
 
 				// If Pac-Man gets a power-up...
 				if (PowerUp()) // Scatter => Frightened
