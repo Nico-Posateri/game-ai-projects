@@ -33,7 +33,7 @@ public class BlinkyFSM : MonoBehavior
 			case State.Scatter:
    				GoToRandomPlace(); // State action
 
-				// If the grace period timer ends...
+			// If the grace period timer ends...
     			if (Timer()) // Scatter => Chase
 				{
 					CurrentState = State.Chase;
