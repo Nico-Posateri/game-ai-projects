@@ -1,14 +1,41 @@
 public class BlinkyFSM : MonoBehavior
 {
-// Declare available states
-public enum State
-{
-Scatter,
-Chase,
-Frightened,
-Dead
-}
+	// Declare available states
+	public enum State
+	{
+		Scatter,
+		Chase,
+		Frightened,
+		Dead
+	}
 
-// Declare current state
-public State CurrentState = State.Scatter;
+	// Declare current state
+	public State CurrentState = State.Scatter;
+
+	// Call update once per frame
+	void Update ()
+	{
+		switch (CurrentState)
+		{
+			// Blinky is in the: Scatter State.
+			case State.Scatter:
+				// ...
+				break;
+
+			// Blinky is in the: Chase State.
+			case State.Chase:
+				// ...
+				break;
+
+			// Blinky is in the: Frightened State.
+			case State.Frightened:
+				// ...
+				break;
+
+			// Blinky is in the: Dead State.
+			case State.Dead:
+				// ...
+				break;
+		}
+	}
 }
