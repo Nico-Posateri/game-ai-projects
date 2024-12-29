@@ -4,11 +4,11 @@
 //
 // The components of a Finite State Machine and their corresponding functions or data types:
 //
-// States:					Transitions:
-//	States			switch			Transitions			if
-//	Available states	enum {}			Transition condition		bool F()
-//	Current state		enum S			Transition action		void F()
-//	State action		void F()
+// States:								Transitions:
+//		States				switch			Transitions				if
+//		Available states	enum {}			Transition condition	bool F()
+//		Current state		enum S			Transition action		void F()
+//		State action		void F()
 
 public class BlinkyFSM : MonoBehavior
 {
@@ -34,11 +34,11 @@ public class BlinkyFSM : MonoBehavior
    				GoToRandomPlace(); // State action
 
 				// If the grace period timer ends...
-    				if (Timer()) // Scatter => Chase
+    			if (Timer()) // Scatter => Chase
 				{
 					CurrentState = State.Chase;
-     					break;
-    				}
+     				break;
+    			}
 
 				// If Pac-Man gets a power-up...
 				if (PowerUp()) // Scatter => Frightened
