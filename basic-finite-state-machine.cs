@@ -1,6 +1,6 @@
-// A "zoomed-in" look at the theoretical FSM of a Unity-cloned Blinky from Pac-Man.
+// A "zoomed-in" look at the theoretical deterministic FSM of a Unity-cloned Blinky from Pac-Man.
 // The functions used in this Finite State Machine do not exist as a result.
-// This is simply meant to showcase the basic elements of an FSM.
+// This is simply meant to showcase the basic elements of an FSM, courtesy of Alan Zucconi.
 //
 // The components of a Finite State Machine and their corresponding functions or data types:
 //
