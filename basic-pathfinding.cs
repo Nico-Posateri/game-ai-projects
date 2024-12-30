@@ -101,6 +101,31 @@ bool Reachable (Node start, Node goal) // A starting Node and a goal Node
 
 // Breadth-First Search -> Dijkstra's Algorithm ////////////////////////////////////////////////////////
 
-// ...
-  
+Dictionary<Node, Node> VectorField_BFS (Node start, Node goal)
+{
+    Queue<Node> frontier = new Queue<Node>();
+    HashSet<Node> visited = new HashSet<Node>();
+    Dictionary<Node, Node> cameFrom = new Dictionary<Node, Node>();
+
+    frontier.Enqueue(start);
+    visited.Add(start);
+    cameFrom[start] = null;
+
+    while (frontier.Any())
+    {
+        Node current = frontier.Dequeue();
+        if (current == goal)
+            break;
+    
+        foreach (Node next in current.Neighbors)
+        {
+            if (! visited.Contains(next))
+            {
+                frontier.Enqueue(next);
+                visited.Add(next);
+            }
+        }
+    }
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
