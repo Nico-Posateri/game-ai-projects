@@ -2,16 +2,18 @@
 // Some of the functions used in this pathfinding algorithm do not exist as a result.
 // This is simply meant to showcase the basic elements of pathfinding, courtesy of Alan Zucconi.
 
-// Node class: Lists the connections between Nodes, which an agent can use for navigation /////////
+// Node class: Lists the connections between Nodes, which an agent can use for navigation //////////////
 
 public class Node
 {
   public Vector3 Position;
   // ...
   public List<Node> Neighbors;
+  // Anti-pattern for keeping track of whether a Node has been visited
+//public bool Visited;
 }
 
-// A graph of Nodes and connections, where connected Nodes are "Neighbors" ////////////////////////
+// A graph of Nodes and connections, where connected Nodes are "Neighbors"
 
 // Adds the Nodes A through E
 Node A = new Node();
@@ -43,8 +45,62 @@ E.Neighbors.Add(D);
 //          \   v |  /      v |        B also connects to D, C also connects to D and E
 //            ->(C)-------->(E)        D connects to E, E connects to D
 
-// Data Structures ////////////////////////////////////////////////////////////////////////////////
+// Data Structures /////////////////////////////////////////////////////////////////////////////////////
+
+// List: Random Access
+List<Node> list = new List<Node>(); // Stores elements, in this case, Neighbors
+list.Add(N); // Adds elements to the list
+
+// HashSet: Quickly tests if an element is present
+HashSet<Node> hashset = new HashSet<Node>(); // Stores elements
+hashset.Add(N); // Adds elements to the hashset, like visited Nodes
+bool contains = hashSet.Contains(N); // Quickly tells whether a specific Node is in the hashset
+
+// Queue: First in, first out
+Queue<Node> queue = new Queue<Node>();
+queue.Enqueue(N); // Adds an element to the queue...
+Node M = queue.Dequeue(); // ...which is then dequeued
+
+// Stack: Last in, first out
+Stack<Node> stack = new Stack<Node>();
+queue.Push(N); // Within the queue, the last element is selected and...
+Node M = queue.Pop(); // ...dequeued
+
+// Dictionary: Associates a key with a value
+Dictionary<Node, float> dictionary = new Dictionary<Node>();
+dictionary[N] = 10;
+
+// Reachability Algorithm //////////////////////////////////////////////////////////////////////////////
+
+// Checks for all Nodes which are connected, or reachable, starting with...
+bool Reachable (Node start, Node goal) // A starting Node and a goal Node
+{
+  Queue<Node> frontier = new Queue<Node>(); // Queues Nodes...
+  HashSet<Node> visited = new HashSet<Node>(); // ...and adds encountered Nodes to the hashset
+
+  frontier.Enqueue(start); // Enqueue and...
+  visited.Add(start); // ...add the starting Node to the algorithm
+
+  while (frontier.Any()) // While the frontier is not empty...
+  {
+      Node current = frontier.Dequeue(); // Dequeue the current Node for processing below
+      if (current == goal) // Exits early, as...
+          return true; // ...the goal Node is reachable! If not...
+
+      foreach (Node next in current.Neighbors) // ...begin looping through available Neighbors
+      {
+          if (! visited.Contains(next)) // Asks, "has this Node been visited already?" If not...
+          {
+              frontier.Enqueue(next); // ...it is queued into the frontier...
+              visited.Add(next); // ...and added to the list of visited Nodes
+          }
+      }
+  }
+  return false; // Returns false if the goal Node is deemed unreachable after scanning all Nodes
+}
+
+// Breadth-First Search -> Dijkstra's Algorithm ////////////////////////////////////////////////////////
 
 // ...
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
+  
+////////////////////////////////////////////////////////////////////////////////////////////////////////
