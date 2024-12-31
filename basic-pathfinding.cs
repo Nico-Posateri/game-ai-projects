@@ -2,7 +2,7 @@
 // Some of the functions used in this pathfinding algorithm do not exist as a result.
 // This is simply meant to showcase the basic elements of pathfinding, courtesy of Alan Zucconi.
 
-// Node class: Lists the connections between Nodes, which an agent can use for navigation //////////////
+// Node class: Lists the connections between Nodes, which an agent can use for navigation /////////////////////////////////////////////////////////////
 
 public class Node
 {
@@ -43,7 +43,7 @@ E.Neighbors.Add(D);
 //          \   v |  /      v |        B also connects to D, C also connects to D and E
 //            ->(C)-------->(E)        D connects to E, E connects to D
 
-// Data Structures /////////////////////////////////////////////////////////////////////////////////////
+// Data Structures ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // List: Random Access
 List<Node> list = new List<Node>(); // Stores elements, in this case, Neighbors
@@ -68,7 +68,7 @@ Node M = queue.Pop(); // ...dequeued
 Dictionary<Node, float> dictionary = new Dictionary<Node>();
 dictionary[N] = 10;
 
-// Reachability Algorithm //////////////////////////////////////////////////////////////////////////////
+// Reachability Algorithm /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Checks for all Nodes which are connected, or reachable, starting with...
 bool Reachable (Node start, Node goal) // A starting Node and a goal Node
@@ -97,33 +97,35 @@ bool Reachable (Node start, Node goal) // A starting Node and a goal Node
     return false; // Returns false if the goal Node is deemed unreachable after scanning all Nodes
 }
 
-// Breadth-First Search ////////////////////////////////////////////////////////////////////////////////
+// Breadth-First Search ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-Dictionary<Node, Node> VectorField_BFS (Node start, Node goal)
+// Checks for all Nodes which are connected, or reachable, starting with...
+Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Node and a goal Node
 {
-    Queue<Node> frontier = new Queue<Node>();
-    HashSet<Node> visited = new HashSet<Node>();
-    Dictionary<Node, Node> cameFrom = new Dictionary<Node, Node>();
+    Queue<Node> frontier = new Queue<Node>(); // Queues Nodes...
+    HashSet<Node> visited = new HashSet<Node>(); // ...and adds encountered Nodes to the hashset
+    Dictionary<Node, Node> cameFrom = new Dictionary<Node, Node>(); // Tells which Node the agent came from to get to the current Node
 
-    frontier.Enqueue(start);
-    visited.Add(start);
-    cameFrom[start] = null;
+    frontier.Enqueue(start); // Enqueue and...
+    visited.Add(start); // ...add the starting Node to the algorithm
+    cameFrom[start] = null; // Marks the origin Node
 
-    while (frontier.Any())
+    while (frontier.Any()) // While the frontier is not empty...
     {
-        Node current = frontier.Dequeue();
-        if (current == goal)
+        Node current = frontier.Dequeue(); // Dequeue the current Node for processing below
+        if (current == goal) // If the current Node is the goal Node, exit early
             break;
     
-        foreach (Node next in current.Neighbors)
+        foreach (Node next in current.Neighbors) // ...begin looping through available Neighbors
         {
-            if (! visited.Contains(next))
+            if (! cameFrom.ContainsKey(next)) // Is the next Node one which the agent came from? If not...
             {
-                frontier.Enqueue(next);
-                visited.Add(next);
+                frontier.Enqueue(next); // ...it is queued into the frontier...
+                cameFrom[next] = current; // ...and marked as the new current
             }
         }
     }
+    return from;
 }
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
