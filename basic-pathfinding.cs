@@ -8,7 +8,8 @@ public class Node
 {
     public Vector3 Position;
     // ...
-    public List<Node> Neighbors;
+    // public List<Node> Neighbors; // Used only for BFS, so it has been replaced below for Dijkstra's Algorithm
+    public List<(Node, float)> Neighbors; // Adds the cost of moving to a Node, represented by a float
 }
 
 // A graph of Nodes and connections, where connected Nodes are "Neighbors"
@@ -70,6 +71,7 @@ dictionary[N] = 10;
 
 // Reachability Algorithm /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* Replaced with BFS
 // Checks for all Nodes which are connected, or reachable, starting with...
 bool Reachable (Node start, Node goal) // A starting Node and a goal Node
 {
@@ -96,8 +98,42 @@ bool Reachable (Node start, Node goal) // A starting Node and a goal Node
     }
     return false; // Returns false if the goal Node is deemed unreachable after scanning all Nodes
 }
+*/
 
 // Breadth-First Search (BFS) /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/* Replaced with Dijkstra's Algorithm
+// Checks for all Nodes which are connected, or reachable, starting with...
+Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Node and a goal Node
+{
+    Queue<Node> frontier = new Queue<Node>(); // Queues Nodes...
+    HashSet<Node> visited = new HashSet<Node>(); // ...and adds encountered Nodes to the hashset
+    Dictionary<Node, Node> cameFrom = new Dictionary<Node, Node>(); // Tells which Node the agent came from to get to the current Node
+
+    frontier.Enqueue(start); // Enqueue and...
+    visited.Add(start); // ...add the starting Node to the algorithm
+    cameFrom[start] = null; // Marks the origin Node
+
+    while (frontier.Any()) // While the frontier is not empty...
+    {
+        Node current = frontier.Dequeue(); // Dequeue the current Node for processing below
+        if (current == goal) // If the current Node is the goal Node, exit early
+            break;
+    
+        foreach (Node next in current.Neighbors) // ...begin looping through available Neighbors
+        {
+            if (! cameFrom.ContainsKey(next)) // Is the next Node one which the agent came from? If not...
+            {
+                frontier.Enqueue(next); // ...it is queued into the frontier...
+                cameFrom[next] = current; // ...and marked as the new current
+            }
+        }
+    }
+    return from;
+}
+*/
+
+// Dijkstra's Algorithm ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Checks for all Nodes which are connected, or reachable, starting with...
 Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Node and a goal Node
@@ -128,6 +164,8 @@ Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Nod
     return from;
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 // Pathfinding ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Reconstructs the path so that the agent may trace it, using the tree built from BFS
@@ -150,6 +188,16 @@ List<Node> FindPath (Node start, Node goal, Dictionary<Node, Node> from)
     path.Reverse(); // Reverses the array, since it was built from goal to start
 
     return path; // Returns the constructed and reversed path, now a complete path from start to goal
+}
+
+// Final Path Construction ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+public List<Node> BFS (Node start, Node goal)
+{
+    Dictionary<Node, Node> from = VectorField_BFS (start, goal); // Calculate the vector field, store the information in a dictionary...
+    List<Node> path = FindPath (start, goal, from); // ...and use the dictionary to construct a path in reverse, then reverses the path
+
+    return path; // Returns the complete constructed path
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
