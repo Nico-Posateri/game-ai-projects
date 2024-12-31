@@ -97,7 +97,7 @@ bool Reachable (Node start, Node goal) // A starting Node and a goal Node
     return false; // Returns false if the goal Node is deemed unreachable after scanning all Nodes
 }
 
-// Breadth-First Search ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Breadth-First Search (BFS) /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Checks for all Nodes which are connected, or reachable, starting with...
 Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Node and a goal Node
@@ -126,6 +126,30 @@ Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Nod
         }
     }
     return from;
+}
+
+// Pathfinding ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Reconstructs the path so that the agent may trace it, using the tree built from BFS
+List<Node> FindPath (Node start, Node goal, Dictionary<Node, Node> from)
+{
+    if (! from.ContainsKey(goal) // If no path is found, i.e. the goal is not within the dictionary...
+        return null; // ...returns null, as the goal can't be reached
+
+    List<Node> path = new List<Node>(); // Begin the list of Nodes within the path being built...
+    Node current = goal; // ...starting from the goal Node
+
+    // Starts from the goal Node and traces the dictionary back to the start to find the optimal path
+    while (current != start) // While the currently observed Node is not the starting Node...
+    {
+        path.Add(current); // ...add this Node to the path
+        current = from[current];
+    }
+
+    path.Add(start);
+    path.Reverse(); // Reverses the array, since it was built from goal to start
+
+    return path; // Returns the constructed and reversed path, now a complete path from start to goal
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
