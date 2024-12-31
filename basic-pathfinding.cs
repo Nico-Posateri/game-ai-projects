@@ -6,11 +6,9 @@
 
 public class Node
 {
-  public Vector3 Position;
-  // ...
-  public List<Node> Neighbors;
-  // Anti-pattern for keeping track of whether a Node has been visited
-//public bool Visited;
+    public Vector3 Position;
+    // ...
+    public List<Node> Neighbors;
 }
 
 // A graph of Nodes and connections, where connected Nodes are "Neighbors"
@@ -75,31 +73,31 @@ dictionary[N] = 10;
 // Checks for all Nodes which are connected, or reachable, starting with...
 bool Reachable (Node start, Node goal) // A starting Node and a goal Node
 {
-  Queue<Node> frontier = new Queue<Node>(); // Queues Nodes...
-  HashSet<Node> visited = new HashSet<Node>(); // ...and adds encountered Nodes to the hashset
+    Queue<Node> frontier = new Queue<Node>(); // Queues Nodes...
+    HashSet<Node> visited = new HashSet<Node>(); // ...and adds encountered Nodes to the hashset
 
-  frontier.Enqueue(start); // Enqueue and...
-  visited.Add(start); // ...add the starting Node to the algorithm
+    frontier.Enqueue(start); // Enqueue and...
+    visited.Add(start); // ...add the starting Node to the algorithm
 
-  while (frontier.Any()) // While the frontier is not empty...
-  {
-      Node current = frontier.Dequeue(); // Dequeue the current Node for processing below
-      if (current == goal) // Exits early, as...
-          return true; // ...the goal Node is reachable! If not...
+    while (frontier.Any()) // While the frontier is not empty...
+    {
+        Node current = frontier.Dequeue(); // Dequeue the current Node for processing below
+        if (current == goal) // Exits early, as...
+            return true; // ...the goal Node is reachable! If not...
 
-      foreach (Node next in current.Neighbors) // ...begin looping through available Neighbors
-      {
-          if (! visited.Contains(next)) // Asks, "has this Node been visited already?" If not...
-          {
-              frontier.Enqueue(next); // ...it is queued into the frontier...
-              visited.Add(next); // ...and added to the list of visited Nodes
-          }
-      }
-  }
-  return false; // Returns false if the goal Node is deemed unreachable after scanning all Nodes
+        foreach (Node next in current.Neighbors) // ...begin looping through available Neighbors
+        {
+            if (! visited.Contains(next)) // Asks, "has this Node been visited already?" If not...
+            {
+                frontier.Enqueue(next); // ...it is queued into the frontier...
+                visited.Add(next); // ...and added to the list of visited Nodes
+            }
+        }
+    }
+    return false; // Returns false if the goal Node is deemed unreachable after scanning all Nodes
 }
 
-// Breadth-First Search -> Dijkstra's Algorithm ////////////////////////////////////////////////////////
+// Breadth-First Search ////////////////////////////////////////////////////////////////////////////////
 
 Dictionary<Node, Node> VectorField_BFS (Node start, Node goal)
 {
