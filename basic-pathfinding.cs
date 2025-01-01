@@ -2,7 +2,7 @@
 // Some of the functions used in this pathfinding algorithm do not exist as a result.
 // This is simply meant to showcase the basic elements of pathfinding, courtesy of Alan Zucconi.
 
-// Node class: Lists the connections between Nodes, which an agent can use for navigation /////////////////////////////////////////////////////////////
+// Node class: Lists the connections between Nodes, which an agent can use for navigation //////////////////////////////////////////////////////////////
 
 public class Node
 {
@@ -44,7 +44,7 @@ E.Neighbors.Add(D);
 //          \   v |  /      v |        B also connects to D, C also connects to D and E
 //            ->(C)-------->(E)        D connects to E, E connects to D
 
-// Data Structures ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Data Structures /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // List: Random Access
 List<Node> list = new List<Node>(); // Stores elements, in this case, Neighbors
@@ -69,7 +69,7 @@ Node M = queue.Pop(); // ...dequeued
 Dictionary<Node, float> dictionary = new Dictionary<Node>();
 dictionary[N] = 10;
 
-// Reachability Algorithm /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Reachability Algorithm //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* Replaced with BFS
 // Checks for all Nodes which are connected, or reachable, starting with...
@@ -100,7 +100,7 @@ bool Reachable (Node start, Node goal) // A starting Node and a goal Node
 }
 */
 
-// Breadth-First Search (BFS) /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Breadth-First Search (BFS) //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /* Replaced with Dijkstra's Algorithm
 // Checks for all Nodes which are connected, or reachable, starting with...
@@ -129,22 +129,23 @@ Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Nod
             }
         }
     }
-    return from;
+    return from; // Returns a dictionary of Nodes
 }
 */
 
-// Dijkstra's Algorithm ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Dijkstra's Algorithm ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+/* Replaced with A*
 // Checks for all Nodes which are connected, or reachable, starting with...
 Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Node and a goal Node
 {
-    Queue<Node> frontier = new Queue<Node>(); // Queues Nodes...
+    PriorityQueue<Node> frontier = new PriorityQueue<Node>(); // Queues Nodes, then dequeues the Node with the lowest "cost"...
     HashSet<Node> visited = new HashSet<Node>(); // ...and adds encountered Nodes to the hashset
-    Dictionary<Node, Node> cameFrom = new Dictionary<Node, Node>(); // Tells which Node the agent came from to get to the current Node
+    Dictionary<Node, float> costSoFar = new Dictionary<Node, float>(); // Associates each Node with a "cost", a float
 
-    frontier.Enqueue(start); // Enqueue and...
-    visited.Add(start); // ...add the starting Node to the algorithm
+    frontier.Enqueue(start, 0); // Enqueue and...
     cameFrom[start] = null; // Marks the origin Node
+    costSoFar[start] = 0; // The cost to move starts at zero
 
     while (frontier.Any()) // While the frontier is not empty...
     {
@@ -152,21 +153,63 @@ Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Nod
         if (current == goal) // If the current Node is the goal Node, exit early
             break;
     
-        foreach (Node next in current.Neighbors) // ...begin looping through available Neighbors
+        foreach ((Node next, float cost) in current.Neighbors) // ...begin looping through available Neighboring Nodes and their costs
         {
-            if (! cameFrom.ContainsKey(next)) // Is the next Node one which the agent came from? If not...
+            float newCost = costSoFar[current] + cost; // New cost is the sum of the cost so far plus the cost of the next Node
+            // "Have we not been here before OR have we been here, but the new cost is less than the cost so far?"
+            if (! costSoFar.ContainsKey(next) || newCost < costSoFar[next])
             {
-                frontier.Enqueue(next); // ...it is queued into the frontier...
+                frontier.Enqueue(next, newCost); // ...it is queued into the frontier...
                 cameFrom[next] = current; // ...and marked as the new current
+                costSoFar[next] = newCost; // Accrue cost
             }
         }
     }
-    return from;
+    return cameFrom; // Returns a dictionary of Nodes representing the vector field
+}
+*/
+
+// A* //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Euclidean Distance - a Heuristic implemented for A*
+float Heuristic (Node start, Node goal)
+{
+    return Vector3.Distance(start.Position, goal.Position);
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Checks for all Nodes which are connected, or reachable, starting with...
+Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Node and a goal Node
+{
+    PriorityQueue<Node> frontier = new PriorityQueue<Node>(); // Queues Nodes, then dequeues the Node with the lowest "cost"...
+    HashSet<Node> visited = new HashSet<Node>(); // ...and adds encountered Nodes to the hashset
+    Dictionary<Node, float> costSoFar = new Dictionary<Node, float>(); // Associates each Node with a "cost", a float
 
-// Pathfinding ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    frontier.Enqueue(start, 0); // Enqueue and...
+    cameFrom[start] = null; // Marks the origin Node
+    costSoFar[start] = 0; // The cost to move starts at zero
+
+    while (frontier.Any()) // While the frontier is not empty...
+    {
+        Node current = frontier.Dequeue(); // Dequeue the current Node for processing below
+        if (current == goal) // If the current Node is the goal Node, exit early
+            break;
+    
+        foreach ((Node next, float cost) in current.Neighbors) // ...begin looping through available Neighboring Nodes and their costs
+        {
+            float newCost = costSoFar[current] + cost; // New cost is the sum of the cost so far plus the cost of the next Node
+            // "Have we not been here before OR have we been here, but the new cost is less than the cost so far?"
+            if (! costSoFar.ContainsKey(next) || newCost < costSoFar[next])
+            {
+                frontier.Enqueue(next, newCost + Heuristic(next, goal)); // ...it is queued into the frontier...
+                cameFrom[next] = current; // ...and marked as the new current
+                costSoFar[next] = newCost; // Accrue cost
+            }
+        }
+    }
+    return cameFrom; // Returns a dictionary of Nodes representing the vector field
+}
+
+// Pathfinding /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Reconstructs the path so that the agent may trace it, using the tree built from BFS
 List<Node> FindPath (Node start, Node goal, Dictionary<Node, Node> from)
@@ -190,7 +233,7 @@ List<Node> FindPath (Node start, Node goal, Dictionary<Node, Node> from)
     return path; // Returns the constructed and reversed path, now a complete path from start to goal
 }
 
-// Final Path Construction ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Final Path Construction /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 public List<Node> BFS (Node start, Node goal)
 {
@@ -200,4 +243,4 @@ public List<Node> BFS (Node start, Node goal)
     return path; // Returns the complete constructed path
 }
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
