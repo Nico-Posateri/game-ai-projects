@@ -235,9 +235,9 @@ List<Node> FindPath (Node start, Node goal, Dictionary<Node, Node> from)
 
 // Final Path Construction /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-public List<Node> BFS (Node start, Node goal)
+public List<Node> AStar (Node start, Node goal)
 {
-    Dictionary<Node, Node> from = VectorField_BFS (start, goal); // Calculate the vector field, store the information in a dictionary...
+    Dictionary<Node, Node> from = VectorField_AStar (start, goal); // Calculate the vector field, store the information in a dictionary...
     List<Node> path = FindPath (start, goal, from); // ...and use the dictionary to construct a path in reverse, then reverses the path
 
     return path; // Returns the complete constructed path
