@@ -137,7 +137,7 @@ Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Nod
 
 /* Replaced with A*
 // Checks for all Nodes which are connected, or reachable, starting with...
-Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Node and a goal Node
+Dictionary<Node, Node> VectorField_Dijkstra (Node start, Node goal) // A starting Node and a goal Node
 {
     PriorityQueue<Node> frontier = new PriorityQueue<Node>(); // Queues Nodes, then dequeues the Node with the lowest "cost"...
     HashSet<Node> visited = new HashSet<Node>(); // ...and adds encountered Nodes to the hashset
@@ -178,7 +178,7 @@ float Heuristic (Node start, Node goal)
 }
 
 // Checks for all Nodes which are connected, or reachable, starting with...
-Dictionary<Node, Node> VectorField_BFS (Node start, Node goal) // A starting Node and a goal Node
+Dictionary<Node, Node> VectorField_AStar (Node start, Node goal) // A starting Node and a goal Node
 {
     PriorityQueue<Node> frontier = new PriorityQueue<Node>(); // Queues Nodes, then dequeues the Node with the lowest "cost"...
     HashSet<Node> visited = new HashSet<Node>(); // ...and adds encountered Nodes to the hashset
