@@ -27,6 +27,8 @@ void FixedUpdate () // In Unity, FixedUpdate allows continuous alteration of phy
     Rigidbody.AddForce(F); // Add the force to the rigid body, should multiply by delta time in Unity
 }
 
+// Seek could be enhanced by asking the agent to begin decelerating once it enters a radius around its target, rather than continual "orbiting"
+
 // Fleeing
 
 public Rigidbody Rigidbody; // The rigid body object we will move
@@ -49,6 +51,8 @@ void FixedUpdate () // In Unity, FixedUpdate allows continuous alteration of phy
     Vector3 F = Vector3.ClampMagnitude(dV, MaxForce); // Calculate F
     Rigidbody.AddForce(F); // Add the force to the rigid body, should multiply by delta time in Unity
 }
+
+// Seek and Flee are bases upon which an agent could be built to evade or pursue
 
 /* EMERGENT BEHAVIORS */////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
