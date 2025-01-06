@@ -4,7 +4,7 @@
 
 /* BEHAVIOR STEERING *//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Seeking
+// Seeking //
 
 public Rigidbody Rigidbody; // The rigid body object we will move
 public Transform Target; // The target we want the rigid body to go to
@@ -29,7 +29,7 @@ void FixedUpdate () // In Unity, FixedUpdate allows continuous alteration of phy
 
 // Seek could be enhanced by asking the agent to begin decelerating once it enters a radius around its target, rather than continual "orbiting"
 
-// Fleeing
+// Fleeing //
 
 public Rigidbody Rigidbody; // The rigid body object we will move
 public Transform Target; // The target we want the rigid body to go to
@@ -56,10 +56,141 @@ void FixedUpdate () // In Unity, FixedUpdate allows continuous alteration of phy
 
 /* EMERGENT BEHAVIORS */////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// Flocking
+// Flocking //
 
-// Particle Life
+public class Boid : MonoBehavior                                     // Boids v
+{
+    // Physics
+    public Vector2 P; // Position
+    public Vector2 V; // Velocity
+    public Vector2 F; // Force
+    public float MaxForce;
 
-// Cellular Automata
+    // Flocking
+    public Boid[] Boids; // The flock
+
+    public float SeparationRadius;
+    public float AlignmentRadius;
+    public float CohesionRadius;
+
+    void Update ()
+    {
+        // Flocking
+        F = Vector2.zero;
+        F += SeparationForce();
+        F += AlignmentForce();
+        F += CohesionForce();
+
+        // Physics
+        V += F * Time.deltaTime;
+        P += V * Time.deltaTime;
+    }                                                                // Boids ^
+
+    Vector2 SeparationForce ()                                       // Boids Separation v
+    {
+        int count = 0;
+        Vector2 force = Vector2.zero;
+
+        // Loops through all the boids
+        foreach (Boid boid in Boids)
+        {
+            // Avoid itself
+            if (boid == this)
+                continue;
+
+            // Only boids close enough
+            float distance = Vector2.Distance(P, boid.P);
+            if (distance > SeparationRadius)
+                continue;
+
+            // Separation force
+            Vector2 direction = (P - boid.P).normalized;
+            force += direction / d;
+
+            count ++;
+        }
+
+        // No forces?
+        if (count == 0)
+            return Vector2.zero;
+
+        // Steering
+        force = Vector2.ClampMagnitude(force, MaxForce);
+        return Vector2.ClampMagnitude(force - V, MaxForce);
+    }                                                                // Boids Separation ^
+
+    Vector2 AlignmentForce ()                                        // Boids Alignment v
+    {
+        int count = 0;
+        Vector2 velocity = Vector2.zero;
+
+        // Loops through all the boids
+        foreach (Boid boid in Boids)
+        {
+            // Avoid itself
+            if (boid == this)
+                continue;
+
+            // Only boids close enough
+            float distance = Vector2.Distance(P, boid.P);
+            if (distance > AlignmentRadius)
+                continue;
+
+            // Average velocity
+            velocity += boid.v;
+
+            count ++;
+        }
+
+        // No forces?
+        if (count == 0)
+            return Vector2.zero;
+
+        // Average velocity
+        velocity /= count;
+
+        // Steering
+        velocity = Vector2.ClampMagnitude(velocity, MaxSpeed);
+        return Vector2.ClampMagnitude(velocity - V, MaxForce);
+    }                                                                // Boids Alignment ^
+
+    Vector2 CohesionForce ()                                         // Boids Cohesion v
+    {
+        int count = 0;
+        Vector2 velocity = Vector2.zero;
+
+        // Loops through all the boids
+        foreach (Boid boid in Boids)
+        {
+            // Avoid itself
+            if (boid == this)
+                continue;
+
+            // Only boids close enough
+            float distance = Vector2.Distance(P, boid.P);
+            if (distance > CohesionRadius)
+                continue;
+
+            // Average velocity
+            position += boid.v;
+
+            count ++;
+        }
+
+        // No forces?
+        if (count == 0)
+            return Vector2.zero;
+
+        // Average position
+        position /= count;
+
+        // Steering
+        return Seek(position);
+    }                                                                // Boids Cohesion ^
+}
+
+// Particle Life //
+
+// Cellular Automata //
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
