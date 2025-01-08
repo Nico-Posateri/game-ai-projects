@@ -58,7 +58,7 @@ void FixedUpdate () // In Unity, FixedUpdate allows continuous alteration of phy
 
 // Flocking //
 
-public class Boid : MonoBehavior                                     // Boids v
+public class Boid : MonoBehaviour                                    // Boids v
 {
     // Physics
     public Vector2 P; // Position
@@ -190,6 +190,35 @@ public class Boid : MonoBehavior                                     // Boids v
 }
 
 // Particle Life //
+
+public class Particle : MonoBehaviour
+{
+    public float Radius; // The radius of interactions
+    public AnimationCurve[] Forces; // The force profile against i-th
+    public int Type; // The type of this particle
+
+    public LayerMask ParticleMask;
+    public Rigidbody Rigidbody;
+
+    void Update()
+    {
+        // Retrieves colliders around this particle by returning colliders which fall within the particle's imaginary surrounding sphere
+        Collider[] colliders = Physics.OverlapSphere(transform.position, Radius, ParticleMask);
+        foreach (Collider collider in colliders)
+        {
+            // Extracts particles from colliders
+            Particle particle = collider.GetComponent<Particle>();
+            if (particle == null) continue; // The i-th collider is not a particle
+            if (particle == this) continue; // Avoid self-interactions
+
+            // Add a force in the direction of the particle, based on the distance
+            float distance = Vector3.Distance(transform.position, particle.transform.position);
+            float force = -Force[particle.Type].Evaluate(distance / Radius); // [0. Radius] -> [0, 1]
+            Vector3 direction = (particle.transform.position = transform.position).normalized;
+            Rigidbody.AddForce(direction * force);
+        }
+    }
+}
 
 // Cellular Automata //
 
