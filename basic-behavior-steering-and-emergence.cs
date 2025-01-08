@@ -220,6 +220,46 @@ public class Particle : MonoBehaviour
     }
 }
 
-// Cellular Automata //
+// Cellular Automata: John Conway's Game of Life //
+
+// Integer grid
+int [,] Grid; // 2D grid of integers where [0] is dead, [1] is alive
+
+// Toroidal world: If a coordinate surpasses an edge of the grid, it loops over to the other side
+int Get (int x, int y)
+{
+    if (x < 0) x = Grid.GetLength(0) - 1;
+    if (y < 0) y = Grid.GetLength(1) - 1;
+
+    if (x >= Grid.GetLength(0)) x = 0;
+    if (y >= Grid.GetLength(1)) y = 0;
+
+    return Grid[x,y];
+}
+
+int [,] UpdateGrid;
+
+void Update ()
+{
+    for (int x = 0; x < Grid.GetLength(0); x++) // Loops through the x-dimension of the grid
+    for (int y = 0; y < Grid.GetLength(1); y++) // Loops through the y-dimension of the grid
+    {
+        // Counts the neighbors surrounding the cell X:
+        int neighbors =
+            Get(x-1, y-1) + Get(x, y-1) + Get(x+1,y-1) + //     *  *  *
+            Get(x-1, y)                  + Get(x+1, y) + //     *  X  *
+            Get(x-1, y+1) + Get(x, y+1) + Get(x+1, y+1); //     *  *  *
+
+        // Rules
+        if (neighbors == 2) UpdatedGrid[x,y] = Grid[x,y]; // Rule 1: Survival
+        else if (neighbors == 3) UpdatedGrid[x,y] = 1;    // Rule 2: Birth
+        else UpdatedGrid[x,y] = 0;                        // Rule 3: Death
+    }
+
+    // Swaps the grids
+    int [,] tempGrid = Grid;
+    Grid = UpdatedGrid;
+    UpdatedGrid = tempGrid;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
