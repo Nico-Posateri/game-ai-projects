@@ -10,7 +10,7 @@
 //		Current state		enum S			Transition action		void F()
 //		State action		void F()
 
-public class BlinkyFSM : MonoBehavior
+public class BlinkyFSM : MonoBehaviour
 {
 	// Declare available states
 	public enum State
